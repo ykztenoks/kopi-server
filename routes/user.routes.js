@@ -61,6 +61,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+    console.log(req.body);
     const { email, username, password } = req.body;
     //CHECKS IF REQ BODY HAS ALL INFO (email OR username AND password)
     if (!(email || username) || !password) {
@@ -101,7 +102,7 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    res.json({ user, jwtToken });
+    res.json({ user, authToken: jwtToken });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -110,9 +111,10 @@ router.post("/login", async (req, res) => {
 
 router.get("/verify", isAuth, async (req, res) => {
   try {
-    res.json({ message: "User is logged in.", user: req.user });
+    const user = await User.findById(req.user._id);
+    res.json({ message: "User is logged in.", user });
   } catch (error) {
-    console.log(error);
+    console.log("error in verify", error);
     res.status(500).json(error);
   }
 });

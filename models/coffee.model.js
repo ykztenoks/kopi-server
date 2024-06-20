@@ -21,6 +21,11 @@ const coffeeSchema = new Schema(
     farm: { type: String },
     altitude: { type: Number, min: 0, max: 3000 },
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+    image: {
+      type: String,
+      default:
+        "https://assets-global.website-files.com/642d682a6e4ca0d303c81fdf/65155692e2dc9f25a8fa90a5_ezgif.com-resize.webp",
+    },
   },
   {
     timestamps: true,

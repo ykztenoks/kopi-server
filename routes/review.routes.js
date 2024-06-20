@@ -5,6 +5,7 @@ import Coffee from "../models/coffee.model.js";
 import isAuth from "../middleware/authentication.middleware.js";
 const router = express.Router();
 
+//create review
 router.post("/:coffeeId", isAuth, async (req, res) => {
   try {
     const { coffeeId } = req.params;
@@ -39,6 +40,7 @@ router.post("/:coffeeId", isAuth, async (req, res) => {
   }
 });
 
+//delete review
 router.delete("/:reviewId", isAuth, async (req, res) => {
   try {
     const { reviewId } = req.params;

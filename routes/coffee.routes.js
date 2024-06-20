@@ -7,9 +7,11 @@ import User from "../models/user.model.js";
 
 const router = express.Router();
 
+//create
 router.post("/", isAuth, isAdmin, async (req, res) => {
   try {
-    const { name, score, roastLevel, country, type, farm, altitude } = req.body;
+    const { name, score, roastLevel, country, type, farm, altitude, image } =
+      req.body;
     const coffeeData = {
       name,
       score,
@@ -18,6 +20,7 @@ router.post("/", isAuth, isAdmin, async (req, res) => {
       type,
       farm,
       altitude,
+      image,
     };
     for (const property in coffeeData) {
       if (!coffeeData[property]) {
@@ -34,10 +37,14 @@ router.post("/", isAuth, isAdmin, async (req, res) => {
   }
 });
 
+//get all coffees
 router.get("/all", async (req, res) => {
   try {
-    const allCoffees = await Coffee.find().populate("reviews");
-
+    const allCoffees = await Coffee.find().populate({
+      path: "reviews",
+      populate: { path: "creator" },
+    });
+    console.log(allCoffees[0]);
     res.json(allCoffees);
   } catch (error) {
     console.log("error fetching all coffees", error);
@@ -45,11 +52,15 @@ router.get("/all", async (req, res) => {
   }
 });
 
+//get a single coffee
 router.get("/:coffeeId", async (req, res) => {
   try {
     const { coffeeId } = req.params;
 
-    const coffee = await Coffee.findById(coffeeId).populate("reviews");
+    const coffee = await Coffee.findById(coffeeId).populate({
+      path: "review",
+      populate: { path: "creator" },
+    });
 
     res.json(coffee);
   } catch (error) {
@@ -57,6 +68,7 @@ router.get("/:coffeeId", async (req, res) => {
   }
 });
 
+//edit coffee
 router.put("/:coffeeId", isAuth, isAdmin, async (req, res) => {
   try {
     const { coffeeId } = req.params;
@@ -88,6 +100,7 @@ router.put("/:coffeeId", isAuth, isAdmin, async (req, res) => {
   }
 });
 
+//delete coffee
 router.delete("/:coffeeId", isAuth, isAdmin, async (req, res) => {
   try {
     const { coffeeId } = req.params;
